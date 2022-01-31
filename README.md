@@ -3,8 +3,8 @@
 Badge: [![codecov](https://codecov.io/gh/ucsb-cs156-w22/team02-w22-6pm-3/branch/main/graph/badge.svg?token=KnZzek05qe)](https://codecov.io/gh/ucsb-cs156-w22/team02-w22-6pm-3)
 
 Storybook is here:
-* Production: <https://ucsb-cs156-w22.github.io/starter-team02-docs/>
-* QA:  <https://ucsb-cs156-w22.github.io/starter-team02-docs-qa/>
+* Production: <https://ucsb-cs156-w22.github.io/starter-team02-w22-6pm-3-docs/>
+* QA:  <https://ucsb-cs156-w22.github.io/starter-team02-w22-6pm-3-docs-qa/>
 
 The GitHub actions script to deploy the Storybook to QA requires some configuration; see [docs/github-actions.md](docs/github-actions.md) for details.
 
