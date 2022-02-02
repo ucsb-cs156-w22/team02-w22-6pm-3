@@ -1,3 +1,7 @@
+# Heroku Deployments:
+Prod Deployment: https://w22-6pm-3-team02.herokuapp.com/
+QA Deployment: https://w22-6pm-3-team02-qa.herokuapp.com/
+
 # starter-team02: dsre-v2
 
 Badge: [![codecov](https://codecov.io/gh/ucsb-cs156-w22/team02-w22-6pm-3/branch/main/graph/badge.svg?token=KnZzek05qe)](https://codecov.io/gh/ucsb-cs156-w22/team02-w22-6pm-3)
