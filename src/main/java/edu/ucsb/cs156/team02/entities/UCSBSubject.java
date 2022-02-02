@@ -28,8 +28,6 @@ public class Todo {
   // can access the user's details
 
 
-  @ManyToOne
-  @JoinColumn(name = "user_id")
   private User user;
   private String subjectCode;
   private String subjectTranslation;
