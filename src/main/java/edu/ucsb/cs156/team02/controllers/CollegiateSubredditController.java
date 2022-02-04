@@ -57,4 +57,27 @@ public class CollegiateSubredditController extends ApiController {
         //^ not sure what function i need to replace
         return reddits;
     }
+
+
+    //trying to do create??
+
+    @ApiOperation(value = "Create a new Collegiate Subreddit")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PostMapping("/post")
+    public CollegiateSubreddit postCollegiateSubreddit(
+            @ApiParam("name") @RequestParam String name,
+            @ApiParam("location") @RequestParam String location,
+            @ApiParam("subreddit") @RequestParam String subreddit) {
+        loggingService.logMethod();
+        CurrentUser currentUser = getCurrentUser();
+        log.info("currentUser={}", currentUser);
+
+        CollegiateSubreddit collegiateSubreddit = new CollegiateSubreddit();
+        collegiateSubreddit.setId(currentUser.getUser().getId());
+        collegiateSubreddit.setName(name);
+        collegiateSubreddit.setLocation(location);
+        collegiateSubreddit.setSubreddit(subreddit);
+        CollegiateSubreddit savedcollegiateSubreddit = collegiateSubredditRepository.save(collegiateSubreddit);
+        return savedcollegiateSubreddit;
+    }
 }
