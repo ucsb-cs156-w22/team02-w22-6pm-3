@@ -33,33 +33,17 @@ import java.util.Optional;
 @Slf4j
 public class CollegiateSubredditController extends ApiController {
 
-
     @Autowired
     CollegiateSubredditRepository collegiateSubredditRepository;
 
-
-    @ApiOperation(value = "List all college subreddits") //
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/admin/all")
+    @ApiOperation(value = "List all college subreddits") 
+    @PreAuthorize("hasRole('ROLE_USER')") // authorization can be removed
+    @GetMapping("/all")
     public Iterable<CollegiateSubreddit> allUsersCollegeSubreddits() {
         loggingService.logMethod();
         Iterable<CollegiateSubreddit> reddits = collegiateSubredditRepository.findAll();
         return reddits;
     }
-
-    @ApiOperation(value = "List this user's todos") // ??
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @GetMapping("/all")
-    public Iterable<CollegiateSubreddit> thisUsersCollegeSubreddits() {
-        loggingService.logMethod();
-        CurrentUser currentUser = getCurrentUser();
-        Iterable<CollegiateSubreddit> reddits = collegiateSubredditRepository.findAllByUserId(currentUser.getUser().getId());
-        //^ not sure what function i need to replace
-        return reddits;
-    }
-
-
-    //trying to do create??
 
     @ApiOperation(value = "Create a new Collegiate Subreddit")
     @PreAuthorize("hasRole('ROLE_USER')")
