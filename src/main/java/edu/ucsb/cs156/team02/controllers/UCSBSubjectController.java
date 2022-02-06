@@ -28,8 +28,8 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 
-@Api(description = "UCSB Subjects")
-@RequestMapping("/api/systemInfo")
+@Api(description = "UCSBSubjects")
+@RequestMapping("/api/UCSBSubjects/")
 @RestController
 @Slf4j
 public class UCSBSubjectController extends ApiController {
@@ -39,7 +39,7 @@ public class UCSBSubjectController extends ApiController {
 
     @ApiOperation(value = "List all UCSB subjects")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/api/UCSBSubjects/all")
+    @GetMapping("/all")
     public Iterable<UCSBSubject> allUCSBSubjects() {
         loggingService.logMethod();
         Iterable<UCSBSubject> subjects = uCSBSubjectRepository.findAll();
@@ -49,7 +49,7 @@ public class UCSBSubjectController extends ApiController {
 
     @ApiOperation(value = "Create a new UCSB subject")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @PostMapping("/api/UCSBSubjects/post")
+    @PostMapping("/post")
     public UCSBSubject postUCSBSubject(
             @ApiParam("subjectCode") @RequestParam String subjectCode,
             @ApiParam("subjectTranslation") @RequestParam String subjectTranslation,
