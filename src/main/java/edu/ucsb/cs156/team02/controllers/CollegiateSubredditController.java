@@ -45,6 +45,7 @@ public class CollegiateSubredditController extends ApiController {
         loggingService.logMethod();
         Iterable<CollegiateSubreddit> reddits = collegiateSubredditRepository.findAll();
         return reddits;
+        //return null;
     }
 
     //POST

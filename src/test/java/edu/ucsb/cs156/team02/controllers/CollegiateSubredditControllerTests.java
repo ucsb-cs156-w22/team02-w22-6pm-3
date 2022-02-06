@@ -82,8 +82,8 @@ public class CollegiateSubredditControllerTests extends ControllerTestCase {
                 .location("Test Location")
                 .subreddit("Test Subreddit")
                 //.user(u)
-               // .id(u_id)
-                .id(1L)
+                .id(u_id)
+                //.id(1L)
                 //.id(0L)
                 .build();
 
