@@ -36,14 +36,18 @@ public class CollegiateSubredditController extends ApiController {
     @Autowired
     CollegiateSubredditRepository collegiateSubredditRepository;
 
+    //GET
+
     @ApiOperation(value = "List all college subreddits") 
-    //@PreAuthorize("hasRole('ROLE_USER')") // authorization can be removed
+    @PreAuthorize("hasRole('ROLE_USER')") // authorization can be removed
     @GetMapping("/all")
     public Iterable<CollegiateSubreddit> allUsersCollegeSubreddits() {
         loggingService.logMethod();
         Iterable<CollegiateSubreddit> reddits = collegiateSubredditRepository.findAll();
         return reddits;
     }
+
+    //POST
 
     @ApiOperation(value = "Create a new Collegiate Subreddit")
     @PreAuthorize("hasRole('ROLE_USER')")
