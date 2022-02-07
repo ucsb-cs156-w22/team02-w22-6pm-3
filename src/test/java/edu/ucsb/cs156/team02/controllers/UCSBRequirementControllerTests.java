@@ -109,7 +109,7 @@ public class UCSBRequirementControllerTests extends ControllerTestCase {
 
         ArrayList<UCSBRequirement> expectedRequirements = new ArrayList<>();
         expectedRequirements.addAll(Arrays.asList(req1, req2));
-        when(ucsbRequirementRepository.findAllByUserId(thisUser.getId())).thenReturn(expectedRequirements);
+        when(ucsbRequirementRepository.findAll()).thenReturn(expectedRequirements);
 
         // act
         MvcResult response = mockMvc.perform(get("/api/UCSBRequirements/all"))
@@ -117,7 +117,7 @@ public class UCSBRequirementControllerTests extends ControllerTestCase {
 
         // assert
 
-        verify(ucsbRequirementRepository, times(1)).findAllByUserId(eq(thisUser.getId()));
+        verify(ucsbRequirementRepository, times(1)).findAll();
         String expectedJson = mapper.writeValueAsString(expectedRequirements);
         String responseString = response.getResponse().getContentAsString();
         assertEquals(expectedJson, responseString);
