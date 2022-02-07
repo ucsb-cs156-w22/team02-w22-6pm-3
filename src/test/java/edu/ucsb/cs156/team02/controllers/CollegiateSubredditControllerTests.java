@@ -96,28 +96,33 @@ public class CollegiateSubredditControllerTests extends ControllerTestCase {
 
         @WithMockUser(roles = { "USER" })
         @Test
-        public void api_todos_all__user_logged_in__returns_only_todos_for_user() throws Exception {
+        public void api_collegeiateSubreddits_user_logged_in__returns_all_collegesubreddit() throws Exception {
 
                 // arrange
 
-                User thisUser = currentUserService.getCurrentUser().getUser();
+                //User thisUser = currentUserService.getCurrentUser().getUser();
 
-                Todo todo1 = Todo.builder().title("Todo 1").details("Todo 1").done(false).user(thisUser).id(1L).build();
-                Todo todo2 = Todo.builder().title("Todo 2").details("Todo 2").done(false).user(thisUser).id(2L).build();
+                CollegiateSubreddit colsub1 = CollegiateSubreddit.builder().name("Sub Name 1").location("Sub Location 1").subreddit("Sub 1").id(1L).build();
+                CollegiateSubreddit colsub2 = CollegiateSubreddit.builder().name("Sub Name 2").location("Sub Location 2").subreddit("Sub 2").id(2L).build();
 
-                ArrayList<Todo> expectedTodos = new ArrayList<>();
-                expectedTodos.addAll(Arrays.asList(todo1, todo2));
-                when(todoRepository.findAllByUserId(thisUser.getId())).thenReturn(expectedTodos);
+                ArrayList<CollegiateSubreddit> expectedCollegiateSubreddits = new ArrayList<>();
+
+
+                expectedCollegiateSubreddits.addAll(Arrays.asList(colsub1, colsub2));
+                when(collegiateSubredditRepository.findAll()).thenReturn(expectedCollegiateSubreddits);
 
                 // act
-                MvcResult response = mockMvc.perform(get("/api/todos/all"))
+                MvcResult response = mockMvc.perform(get("/api/collegiateSubreddits/all"))
                                 .andExpect(status().isOk()).andReturn();
 
                 // assert
 
-                verify(todoRepository, times(1)).findAllByUserId(eq(thisUser.getId()));
-                String expectedJson = mapper.writeValueAsString(expectedTodos);
+                verify(collegiateSubredditRepository, times(1)).findAll();
+                String expectedJson = mapper.writeValueAsString(expectedCollegiateSubreddits);
                 String responseString = response.getResponse().getContentAsString();
+
+                
                 assertEquals(expectedJson, responseString);
+                //assertEquals(1,1);
         }
 }
