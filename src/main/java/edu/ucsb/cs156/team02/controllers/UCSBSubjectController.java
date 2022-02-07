@@ -28,14 +28,29 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 
+
+
 @Api(description = "UCSBSubjects")
 @RequestMapping("/api/UCSBSubjects/")
 @RestController
 @Slf4j
 public class UCSBSubjectController extends ApiController {
 
+    public class UCSBSubjectOrError {
+        Long id;
+        UCSBSubject uCSBSubject;
+        ResponseEntity<String> error;
+        public UCSBSubjectOrError(Long id) {
+        this.id = id;
+    }
+    }
+
     @Autowired
     UCSBSubjectRepository uCSBSubjectRepository;
+
+
+    @Autowired
+    ObjectMapper mapper;
 
     @ApiOperation(value = "List all UCSB subjects")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -71,4 +86,43 @@ public class UCSBSubjectController extends ApiController {
         UCSBSubject savedUCSBSubject = uCSBSubjectRepository.save(uCSBSubject);
         return savedUCSBSubject;
     }
+
+
+    
+    @ApiOperation(value = "Get record of UCSB Subject with id")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("")
+    public ResponseEntity<String> getUCSBSubjectById123_admin(
+            @ApiParam("id") @RequestParam Long id) throws JsonProcessingException {
+        loggingService.logMethod();
+
+        UCSBSubjectOrError toe = new UCSBSubjectOrError(id);
+
+        toe = doesUCSBSubjectExist(toe);
+        if (toe.error != null) {
+            return toe.error;
+        }
+
+        String body = mapper.writeValueAsString(toe.uCSBSubject);
+        return ResponseEntity.ok().body(body);
+    }
+
+    public UCSBSubjectOrError doesUCSBSubjectExist(UCSBSubjectOrError toe) {
+
+        Optional<UCSBSubject> optionalUCSBSubject = uCSBSubjectRepository.findById(toe.id);
+
+        if (optionalUCSBSubject.isEmpty()) {
+            toe.error = ResponseEntity
+                    .badRequest()
+                    .body(String.format("subject with id %d not found", toe.id));
+        } else {
+            toe.uCSBSubject = optionalUCSBSubject.get();
+        }
+        return toe;
+    }
+    
+
+    
+
+    
 }
