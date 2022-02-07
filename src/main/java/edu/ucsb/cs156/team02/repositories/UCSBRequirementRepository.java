@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UCSBRequirementRepository extends CrudRepository<UCSBRequirement, Long> {
-  //Iterable<UCSBRequirement> findAllByUserId(Long user_id);
+  Iterable<UCSBRequirement> findAllByUserId(Long user_id);
 }
