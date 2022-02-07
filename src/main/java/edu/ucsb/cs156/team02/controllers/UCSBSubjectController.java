@@ -90,7 +90,7 @@ public class UCSBSubjectController extends ApiController {
 
     
     @ApiOperation(value = "Get record of UCSB Subject with id")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("")
     public ResponseEntity<String> getUCSBSubjectById123_admin(
             @ApiParam("id") @RequestParam Long id) throws JsonProcessingException {
@@ -114,7 +114,7 @@ public class UCSBSubjectController extends ApiController {
         if (optionalUCSBSubject.isEmpty()) {
             toe.error = ResponseEntity
                     .badRequest()
-                    .body(String.format("subject with id %d not found", toe.id));
+                    .body(String.format("id %d not found", toe.id));
         } else {
             toe.uCSBSubject = optionalUCSBSubject.get();
         }
