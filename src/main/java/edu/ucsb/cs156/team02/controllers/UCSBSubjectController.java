@@ -152,6 +152,33 @@ public class UCSBSubjectController extends ApiController {
         return ResponseEntity.ok().body(String.format("record %d deleted", id));
 
     }
+
+
+    @ApiOperation(value = "Update a single subject (regardless of ownership, admin only, can't change ownership)")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("")
+    public ResponseEntity<String> putUCSBSubjectById(
+            @ApiParam("id") @RequestParam Long id,
+            @RequestBody @Valid UCSBSubject incomingUCSBSubject) throws JsonProcessingException {
+        loggingService.logMethod();
+
+        UCSBSubjectOrError toe = new UCSBSubjectOrError(id);
+
+        toe = doesUCSBSubjectExist(toe);
+        if (toe.error != null) {
+            return toe.error;
+        }
+
+        // Even the admin can't change the user; they can change other details
+        // but not that.
+
+        //User previousUser = toe.todo.getUser();
+        //incomingTodo.setUser(previousUser);
+        uCSBSubjectRepository.save(incomingUCSBSubject);
+
+        String body = mapper.writeValueAsString(incomingUCSBSubject);
+        return ResponseEntity.ok().body(body);
+    }
     
     
     
