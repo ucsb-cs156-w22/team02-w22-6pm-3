@@ -92,7 +92,7 @@ public class UCSBSubjectController extends ApiController {
     @ApiOperation(value = "Get record of UCSB Subject with id")
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("")
-    public ResponseEntity<String> getUCSBSubjectById123_admin(
+    public ResponseEntity<String> getUCSBSubjectById(
             @ApiParam("id") @RequestParam Long id) throws JsonProcessingException {
         loggingService.logMethod();
 
@@ -120,6 +120,8 @@ public class UCSBSubjectController extends ApiController {
         }
         return toe;
     }
+
+    
     
 
     
