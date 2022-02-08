@@ -36,9 +36,25 @@ public class CollegiateSubredditController extends ApiController {
     @Autowired
     CollegiateSubredditRepository collegiateSubredditRepository;
 
-    
     @Autowired
     ObjectMapper mapper;
+
+    
+        /**
+     * This inner class helps us factor out some code for checking
+     * whether collegiate subreddits exist
+     * along with the error messages pertaining to those situations. It
+     * bundles together the state needed for those checks.
+     */
+    public class CollegiateSubredditOrError {
+        Long id;
+        CollegiateSubreddit collegiateSubreddit;
+        ResponseEntity<String> error;
+
+        public CollegiateSubredditOrError(Long id) {
+            this.id = id;
+        }
+    }
 
     //GET
 
@@ -74,12 +90,9 @@ public class CollegiateSubredditController extends ApiController {
         return savedcollegiateSubreddit;
     }
 
-
-        ///////
-
-        @ApiOperation(value = "Get a single todo (users only")
+    @ApiOperation(value = "Get a single collegesubreddit (users only")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @GetMapping("/all")
+    @GetMapping("")
     public ResponseEntity<String> getCollegiateSubredditById(
             @ApiParam("id") @RequestParam Long id) throws JsonProcessingException {
         loggingService.logMethod();
@@ -96,24 +109,7 @@ public class CollegiateSubredditController extends ApiController {
     }
 
 
-    /**
-     * This inner class helps us factor out some code for checking
-     * whether collegiate subreddits exist
-     * along with the error messages pertaining to those situations. It
-     * bundles together the state needed for those checks.
-     */
-    public class CollegiateSubredditOrError {
-        Long id;
-        CollegiateSubreddit collegiateSubreddit;
-        ResponseEntity<String> error;
-
-        public CollegiateSubredditOrError(Long id) {
-            this.id = id;
-        }
-    }
-
-    
-        /**
+            /**
      * Pre-conditions: csor.id is value to look up, csor.todo and csor.error are null
      * 
      * Post-condition: if collegeSubreddit with id csor.id exists, csor.collegeSubreddit now refers to it, and
@@ -135,5 +131,5 @@ public class CollegiateSubredditController extends ApiController {
         }
         return csor;
     }
-
+    
 }
