@@ -36,6 +36,10 @@ public class CollegiateSubredditController extends ApiController {
     @Autowired
     CollegiateSubredditRepository collegiateSubredditRepository;
 
+    
+    @Autowired
+    ObjectMapper mapper;
+
     //GET
 
     @ApiOperation(value = "List all college subreddits") 
@@ -69,4 +73,67 @@ public class CollegiateSubredditController extends ApiController {
         CollegiateSubreddit savedcollegiateSubreddit = collegiateSubredditRepository.save(collegiateSubreddit);
         return savedcollegiateSubreddit;
     }
+
+
+        ///////
+
+        @ApiOperation(value = "Get a single todo (users only")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/all")
+    public ResponseEntity<String> getCollegiateSubredditById(
+            @ApiParam("id") @RequestParam Long id) throws JsonProcessingException {
+        loggingService.logMethod();
+
+        CollegiateSubredditOrError csor = new CollegiateSubredditOrError(id);
+
+        csor = doesCollegiateSubredditExist(csor);
+        if (csor.error != null) {
+            return csor.error;
+        }
+
+        String body = mapper.writeValueAsString(csor.collegiateSubreddit);
+        return ResponseEntity.ok().body(body);
+    }
+
+
+    /**
+     * This inner class helps us factor out some code for checking
+     * whether collegiate subreddits exist
+     * along with the error messages pertaining to those situations. It
+     * bundles together the state needed for those checks.
+     */
+    public class CollegiateSubredditOrError {
+        Long id;
+        CollegiateSubreddit collegiateSubreddit;
+        ResponseEntity<String> error;
+
+        public CollegiateSubredditOrError(Long id) {
+            this.id = id;
+        }
+    }
+
+    
+        /**
+     * Pre-conditions: csor.id is value to look up, csor.todo and csor.error are null
+     * 
+     * Post-condition: if collegeSubreddit with id csor.id exists, csor.collegeSubreddit now refers to it, and
+     * error is null.
+     * Otherwise, collegeSubreddit with id csor.id does not exist, and error is a suitable return
+     * value to
+     * report this error condition.
+     */
+    public CollegiateSubredditOrError doesCollegiateSubredditExist(CollegiateSubredditOrError csor) {
+
+        Optional<CollegiateSubreddit> optionalCollegiateSubreddit = collegiateSubredditRepository.findById(csor.id);
+
+        if (optionalCollegiateSubreddit.isEmpty()) {
+            csor.error = ResponseEntity
+                    .badRequest()
+                    .body(String.format("todo with id %d not found", csor.id));
+        } else {
+            csor.collegiateSubreddit = optionalCollegiateSubreddit.get();
+        }
+        return csor;
+    }
+
 }
