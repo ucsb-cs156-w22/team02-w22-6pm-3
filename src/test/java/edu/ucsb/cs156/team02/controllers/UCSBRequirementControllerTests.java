@@ -201,7 +201,6 @@ public class UCSBRequirementControllerTests extends ControllerTestCase {
 
     @Test
     public void api_reqs_post() throws Exception {
-        
         // arrange
 
         UCSBRequirement expectedReq = UCSBRequirement.builder()
@@ -250,19 +249,19 @@ public class UCSBRequirementControllerTests extends ControllerTestCase {
 
         // act
         MvcResult response = mockMvc.perform(
-                delete("/api/todos?id=15")
+                delete("/api/UCSBRequirements/?id=15")
                         .with(csrf()))
                 .andExpect(status().isBadRequest()).andReturn();
 
         // assert
         verify(ucsbRequirementRepository, times(1)).findById(15L);
         String responseString = response.getResponse().getContentAsString();
-        assertEquals("todo with id 15 not found", responseString);
+        assertEquals("requirement with id 15 not found", responseString);
     }
 
-    @WithMockUser(roles = { "ADMIN" })
+    @WithMockUser(roles = { "USER" })
     @Test
-    public void api_reqs__admin_logged_in__delete_req() throws Exception {
+    public void api_reqs__user_logged_in__delete_req() throws Exception {
         // arrange
 
         User otherUser = User.builder().id(98L).build();
@@ -280,7 +279,7 @@ public class UCSBRequirementControllerTests extends ControllerTestCase {
 
         // act
         MvcResult response = mockMvc.perform(
-                delete("/api/todos/admin?id=16")
+                delete("/api/UCSBRequirements/?id=16")
                         .with(csrf()))
                 .andExpect(status().isOk()).andReturn();
 
@@ -288,7 +287,7 @@ public class UCSBRequirementControllerTests extends ControllerTestCase {
         verify(ucsbRequirementRepository, times(1)).findById(16L);
         verify(ucsbRequirementRepository, times(1)).deleteById(16L);
         String responseString = response.getResponse().getContentAsString();
-        assertEquals("Requirement with id 16 deleted", responseString);
+        assertEquals("requirement with id 16 deleted", responseString);
     }
 
 }
