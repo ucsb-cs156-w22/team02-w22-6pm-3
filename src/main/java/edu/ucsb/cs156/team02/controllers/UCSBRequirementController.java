@@ -44,7 +44,7 @@ public class UCSBRequirementController extends ApiController {
 
     @Autowired
     ObjectMapper mapper;
-
+    // Added this in previous task by accident
     @ApiOperation(value = "Get a single requirement by ID")
     // @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("")
@@ -61,7 +61,7 @@ public class UCSBRequirementController extends ApiController {
         String body = mapper.writeValueAsString(roe.req);
         return ResponseEntity.ok().body(body);
     }
-    
+
     @ApiOperation(value = "List all requirements")
     @GetMapping("/all")
     public Iterable<UCSBRequirement> allUCSBRequirements() {
