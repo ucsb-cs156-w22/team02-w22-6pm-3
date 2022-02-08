@@ -34,7 +34,7 @@ import java.util.Optional;
 
 public class UCSBRequirementController extends ApiController{
 
-    /*
+    
     public class UCSBRequirementOrError {
         Long id;
         UCSBRequirement ucsbRe;
@@ -43,7 +43,7 @@ public class UCSBRequirementController extends ApiController{
             this.id = id;
         }
     }
-    */
+    
 
     @Autowired
     UCSBRequirementRepository ucsbRequirementRepository;
