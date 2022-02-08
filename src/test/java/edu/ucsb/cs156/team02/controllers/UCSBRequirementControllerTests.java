@@ -231,4 +231,86 @@ public class UCSBRequirementControllerTests extends ControllerTestCase {
         assertEquals(expectedJson, responseString);
     }
 
+    @Test
+    public void api_reqs__put_req() throws Exception {
+
+        // arrange
+
+        UCSBRequirement initialReq = UCSBRequirement.builder()
+                .requirementCode("X")
+                .requirementTranslation("X")
+                .collegeCode("X")
+                .objCode("X")
+                .courseCount(0)
+                .units(0)
+                .inactive(false)
+                .id(42L).build();
+
+        UCSBRequirement updatedReq = UCSBRequirement.builder()
+                .requirementCode("New Req Code")
+                .requirementTranslation("New Req Translation")
+                .collegeCode("New College Code")
+                .objCode("New Obj Code")
+                .courseCount(10)
+                .units(10)
+                .inactive(true)
+                .id(42L).build();
+
+        String requestBody = mapper.writeValueAsString(updatedReq);
+        String expectedReturn = mapper.writeValueAsString(updatedReq);
+
+        when(ucsbRequirementRepository.findById(eq(42L))).thenReturn(Optional.of(initialReq));
+
+        // act
+
+        MvcResult response = mockMvc.perform(
+                put("/api/UCSBRequirements?id=42")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody)
+                        .with(csrf()))
+                .andExpect(status().isOk()).andReturn();
+
+        // assert
+
+        verify(ucsbRequirementRepository, times(1)).findById(42L);
+        verify(ucsbRequirementRepository, times(1)).save(updatedReq);
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals(expectedReturn, responseString);
+    }
+
+    @Test
+    public void api_reqs__cannot_put_req_that_does_not_exist() throws Exception {
+
+        // arrange
+
+        UCSBRequirement updatedReq = UCSBRequirement.builder()
+                .requirementCode("New Req Code")
+                .requirementTranslation("New Req Translation")
+                .collegeCode("New College Code")
+                .objCode("New Obj Code")
+                .courseCount(10)
+                .units(10)
+                .inactive(true)
+                .id(42L).build();
+
+        String requestBody = mapper.writeValueAsString(updatedReq);
+
+        when(ucsbRequirementRepository.findById(eq(42L))).thenReturn(Optional.empty());
+
+        // act
+        MvcResult response = mockMvc.perform(
+                put("/api/UCSBRequirements?id=42")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody)
+                        .with(csrf()))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        // assert
+        verify(ucsbRequirementRepository, times(1)).findById(42L);
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals("requirement with id 42 not found", responseString);
+    }
+
 }
