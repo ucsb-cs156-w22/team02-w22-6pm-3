@@ -61,45 +61,7 @@ public class UCSBRequirementController extends ApiController {
         String body = mapper.writeValueAsString(roe.req);
         return ResponseEntity.ok().body(body);
     }
-
-    @ApiOperation(value = "Delete a requirement by ID")
-    @DeleteMapping("")
-    public ResponseEntity<String> deleteUCSBRequirement(
-            @ApiParam("id") @RequestParam Long id) {
-        loggingService.logMethod();
-
-        UCSBRequirementOrError roe = new UCSBRequirementOrError(id);
-
-        roe = doesUCSBRequirementExist(roe);
-        if (roe.error != null) {
-            return roe.error;
-        }
-
-        ucsbRequirementRepository.deleteById(id);
-        return ResponseEntity.ok().body(String.format("requirement with id %d deleted", id));
-
-    }
-
-    @ApiOperation(value = "Update a single requirement by ID")
-    @PutMapping("")
-    public ResponseEntity<String> putTodoById(
-            @ApiParam("id") @RequestParam Long id,
-            @RequestBody @Valid UCSBRequirement incomingUCSBRequirement) throws JsonProcessingException {
-        loggingService.logMethod();
-
-        UCSBRequirementOrError roe = new UCSBRequirementOrError(id);
-
-        roe = doesUCSBRequirementExist(roe);
-        if (roe.error != null) {
-            return roe.error;
-        }
-
-        ucsbRequirementRepository.save(incomingUCSBRequirement);
-
-        String body = mapper.writeValueAsString(incomingUCSBRequirement);
-        return ResponseEntity.ok().body(body);
-    }
-
+    
     @ApiOperation(value = "List all requirements")
     @GetMapping("/all")
     public Iterable<UCSBRequirement> allUCSBRequirements() {
