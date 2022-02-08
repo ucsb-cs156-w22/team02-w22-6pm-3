@@ -154,7 +154,7 @@ public class UCSBSubjectController extends ApiController {
     }
 
 
-    @ApiOperation(value = "Update a single subject (regardless of ownership, admin only, can't change ownership)")
+    @ApiOperation(value = "Update a single subject ")
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("")
     public ResponseEntity<String> putUCSBSubjectById(
