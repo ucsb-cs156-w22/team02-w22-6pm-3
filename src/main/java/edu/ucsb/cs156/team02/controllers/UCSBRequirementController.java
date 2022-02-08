@@ -112,4 +112,23 @@ public class UCSBRequirementController extends ApiController {
         return roe;
     }
 
+    @ApiOperation(value = "Delete a requirement by ID")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @DeleteMapping("")
+    public ResponseEntity<String> deleteUCSBRequirement(
+            @ApiParam("id") @RequestParam Long id) {
+        loggingService.logMethod();
+
+        UCSBRequirementOrError toe = new UCSBRequirementOrError(id);
+
+        toe = doesUCSBRequirementExist(toe);
+        if (toe.error != null) {
+            return toe.error;
+        }
+
+        ucsbRequirementRepository.deleteById(id);
+        return ResponseEntity.ok().body(String.format("Requirement with id %d deleted", id));
+
+    }
+
 }
