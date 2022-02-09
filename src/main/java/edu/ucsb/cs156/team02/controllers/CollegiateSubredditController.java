@@ -82,7 +82,8 @@ public class CollegiateSubredditController extends ApiController {
         log.info("currentUser={}", currentUser);
 
         CollegiateSubreddit collegiateSubreddit = new CollegiateSubreddit();
-        collegiateSubreddit.setId(currentUser.getUser().getId());
+        //collegiateSubreddit.setId(currentUser.getUser().getId());
+        //database automatically assigns (does it sequentially)
         collegiateSubreddit.setName(name);
         collegiateSubreddit.setLocation(location);
         collegiateSubreddit.setSubreddit(subreddit);
@@ -90,7 +91,7 @@ public class CollegiateSubredditController extends ApiController {
         return savedcollegiateSubreddit;
     }
 
-    @ApiOperation(value = "Get a single collegesubreddit (users only")
+    @ApiOperation(value = "Get a single college subreddit by ID")
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("")
     public ResponseEntity<String> getCollegiateSubredditById(
@@ -110,7 +111,7 @@ public class CollegiateSubredditController extends ApiController {
 
 
             /**
-     * Pre-conditions: csor.id is value to look up, csor.todo and csor.error are null
+     * Pre-conditions: csor.id is value to look up, csor.collegiateSubreddit and csor.error are null
      * 
      * Post-condition: if collegeSubreddit with id csor.id exists, csor.collegeSubreddit now refers to it, and
      * error is null.
@@ -125,7 +126,7 @@ public class CollegiateSubredditController extends ApiController {
         if (optionalCollegiateSubreddit.isEmpty()) {
             csor.error = ResponseEntity
                     .badRequest()
-                    .body(String.format("todo with id %d not found", csor.id));
+                    .body(String.format("id %d not found", csor.id));
         } else {
             csor.collegiateSubreddit = optionalCollegiateSubreddit.get();
         }
