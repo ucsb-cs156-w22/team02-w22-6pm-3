@@ -31,7 +31,7 @@ import java.util.Optional;
 
 
 @Api(description = "UCSBSubjects")
-@RequestMapping("/api/UCSBSubjects/")
+@RequestMapping("/api/UCSBSubjects")
 @RestController
 @Slf4j
 public class UCSBSubjectController extends ApiController {
@@ -53,7 +53,7 @@ public class UCSBSubjectController extends ApiController {
     ObjectMapper mapper;
 
     @ApiOperation(value = "List all UCSB subjects")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/all")
     public Iterable<UCSBSubject> allUCSBSubjects() {
         loggingService.logMethod();
@@ -151,6 +151,33 @@ public class UCSBSubjectController extends ApiController {
         uCSBSubjectRepository.deleteById(id);
         return ResponseEntity.ok().body(String.format("record %d deleted", id));
 
+    }
+
+
+    @ApiOperation(value = "Update a single subject ")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("")
+    public ResponseEntity<String> putUCSBSubjectById(
+            @ApiParam("id") @RequestParam Long id,
+            @RequestBody @Valid UCSBSubject incomingUCSBSubject) throws JsonProcessingException {
+        loggingService.logMethod();
+
+        UCSBSubjectOrError toe = new UCSBSubjectOrError(id);
+
+        toe = doesUCSBSubjectExist(toe);
+        if (toe.error != null) {
+            return toe.error;
+        }
+
+        // Even the admin can't change the user; they can change other details
+        // but not that.
+
+        //User previousUser = toe.todo.getUser();
+        //incomingTodo.setUser(previousUser);
+        uCSBSubjectRepository.save(incomingUCSBSubject);
+
+        String body = mapper.writeValueAsString(incomingUCSBSubject);
+        return ResponseEntity.ok().body(body);
     }
     
     
