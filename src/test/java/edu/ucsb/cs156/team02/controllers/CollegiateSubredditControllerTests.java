@@ -170,4 +170,74 @@ public class CollegiateSubredditControllerTests extends ControllerTestCase {
             assertEquals("id 7 not found", responseString);
         }
 
+
+
+
+	@WithMockUser(roles = { "USER" })
+    @Test
+    public void api_collegiateSubreddits__user_logged_in__put_collegiateSubreddit() throws Exception {
+        // arrange
+
+        CollegiateSubreddit redditPutTest = CollegiateSubreddit
+		.builder().name("College").location("Location").subreddit("Subreddit").id(7L).build();
+    
+
+        CollegiateSubreddit updatedCollegiateSubreddit = CollegiateSubreddit
+		.builder().name("New College").location("New Location").subreddit("New Subreddit").id(7L).build();
+        CollegiateSubreddit correctCollegiateSubreddit = CollegiateSubreddit
+		.builder().name("New College").location("New Location").subreddit("New Subreddit").id(7L).build();
+
+        String requestBody = mapper.writeValueAsString(updatedCollegiateSubreddit);
+        String expectedReturn = mapper.writeValueAsString(correctCollegiateSubreddit);
+
+        when(collegiateSubredditRepository.findById(eq(7L))).thenReturn(Optional.of(redditPutTest));
+
+        // act
+        MvcResult response = mockMvc.perform(put("/api/collegiateSubreddits?id=7")
+		        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody)
+                        .with(csrf()))
+                .andExpect(status().isOk()).andReturn();
+
+        // assert
+        verify(collegiateSubredditRepository, times(1)).findById(7L);
+        verify(collegiateSubredditRepository, times(1)).save(correctCollegiateSubreddit);
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals(expectedReturn, responseString);
+    }
+
+
+
+    @WithMockUser(roles = { "USER" })
+    @Test
+    public void api_collegiateSubreddits__user_logged_in__cannot_put_CollegiateSubreddit_that_does_not_exist() throws Exception {
+        // arrange
+
+	CollegiateSubreddit updatedCollegiateSubreddit = CollegiateSubreddit.builder()
+		.name("College").location("Location").subreddit("Subreddit").id(7L).build();
+
+        String requestBody = mapper.writeValueAsString(updatedCollegiateSubreddit);
+
+        when(collegiateSubredditRepository.findById(eq(7L))).thenReturn(Optional.empty());
+
+        // act
+        MvcResult response = mockMvc.perform(
+                put("/api/collegiateSubreddits?id=7")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody)
+                        .with(csrf()))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        // assert
+
+        verify(collegiateSubredditRepository, times(1)).findById(7L);
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals("id 7 not found", responseString);
+    }
+
+
+
+
 }

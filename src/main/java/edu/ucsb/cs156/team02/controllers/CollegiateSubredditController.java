@@ -112,21 +112,18 @@ public class CollegiateSubredditController extends ApiController {
 
     @ApiOperation(value = "Edit a single college subreddit")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @PutMapping("/all")
+    @PutMapping("")
     public ResponseEntity<String> putCollegiateSubredditById(
             @ApiParam("id") @RequestParam Long id, 
             @RequestBody @Valid CollegiateSubreddit incomingCollegiateSubreddit) throws JsonProcessingException {
         loggingService.logMethod();
 
-        CollegiateSubredditOrError csoe= new CollegiateSubredditOrError(id);
+        CollegiateSubredditOrError csoe = new CollegiateSubredditOrError(id);
 
-        csoe= doesCollegiateSubredditExist(csoe);
+        csoe = doesCollegiateSubredditExist(csoe);
         if (csoe.error != null) {
             return csoe.error;
         }
-
-        // Even the admin can't change the user; they can change other details
-        // but not that.
         
         long previousId = csoe.collegiateSubreddit.getId();
         incomingCollegiateSubreddit.setId(previousId);
