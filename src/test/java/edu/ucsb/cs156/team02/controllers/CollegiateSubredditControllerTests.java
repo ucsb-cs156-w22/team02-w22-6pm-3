@@ -61,7 +61,7 @@ public class CollegiateSubredditControllerTests extends ControllerTestCase {
         // Only users (and admin, I'm assuming) can post
         @Test
         public void api_collegiateSubreddits_post__logged_out__returns_403() throws Exception {
-                mockMvc.perform(post("/api/todos/post"))
+                mockMvc.perform(post("/api/collegiateSubreddits/post"))
                                 .andExpect(status().is(403));
         }
 
@@ -75,7 +75,7 @@ public class CollegiateSubredditControllerTests extends ControllerTestCase {
                                 .name("Test Name")
                                 .location("Test Location")
                                 .subreddit("Test Subreddit")
-                                .id(1L)
+                                //.id(1L)
                                 .build();
 
                 when(collegiateSubredditRepository.save(eq(expectedCollegiateSubreddit)))
@@ -96,7 +96,7 @@ public class CollegiateSubredditControllerTests extends ControllerTestCase {
 
         @WithMockUser(roles = { "USER" })
         @Test
-        public void api_collegeiateSubreddits_user_logged_in__returns_all_collegesubreddit() throws Exception {
+        public void api_collegiateSubreddits_user_logged_in__returns_all_collegesubreddit() throws Exception {
 
                 // arrange
 
@@ -125,4 +125,49 @@ public class CollegiateSubredditControllerTests extends ControllerTestCase {
                 assertEquals(expectedJson, responseString);
                 //assertEquals(1,1);
         }
+
+        //Tests for single endpoint GET
+
+        @WithMockUser(roles = { "USER" })
+        @Test
+        public void api_collegiateSubreddits__user_logged_in__returns_a_collegiateSubreddit_that_exists() throws Exception {
+    
+            // arrange
+    
+            CollegiateSubreddit colsub1 = CollegiateSubreddit.builder().name("Test Name").location("Test Loc").subreddit("Test Sub").id(7L).build();
+            when(collegiateSubredditRepository.findById(eq(7L))).thenReturn(Optional.of(colsub1));
+    
+            // act
+            MvcResult response = mockMvc.perform(get("/api/collegiateSubreddits?id=7"))
+                    .andExpect(status().isOk()).andReturn();
+    
+            // assert
+    
+            verify(collegiateSubredditRepository, times(1)).findById(eq(7L));
+            String expectedJson = mapper.writeValueAsString(colsub1);
+            String responseString = response.getResponse().getContentAsString();
+            assertEquals(expectedJson, responseString);
+        }
+    
+        @WithMockUser(roles = { "USER" })
+        @Test
+        public void api_collegiateSubreddits__user_logged_in__search_for_collegeiateSubreddit_that_does_not_exist() throws Exception {
+    
+            // arrange
+    
+            User u = currentUserService.getCurrentUser().getUser();
+    
+            when(collegiateSubredditRepository.findById(eq(7L))).thenReturn(Optional.empty());
+    
+            // act
+            MvcResult response = mockMvc.perform(get("/api/collegiateSubreddits?id=7"))
+                    .andExpect(status().isBadRequest()).andReturn();
+    
+            // assert
+    
+            verify(collegiateSubredditRepository, times(1)).findById(eq(7L));
+            String responseString = response.getResponse().getContentAsString();
+            assertEquals("id 7 not found", responseString);
+        }
+
 }
