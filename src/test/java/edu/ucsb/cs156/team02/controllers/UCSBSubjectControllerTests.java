@@ -48,7 +48,7 @@ public class UCSBSubjectControllerTests extends ControllerTestCase {
     }
 
 
-    /*
+    
     @WithMockUser(roles = { "USER" })
     @Test
     public void api_ucsbsubject__user_logged_in__returns_a_UCSBSubject_that_exists() throws Exception {
@@ -60,7 +60,7 @@ public class UCSBSubjectControllerTests extends ControllerTestCase {
         when(uCSBSubjectRepository.findById(eq(7L))).thenReturn(Optional.of(ucsbSubject1));
 
         // act
-        MvcResult response = mockMvc.perform(get("/api/UCSBSubjects?id=7"))
+        MvcResult response = mockMvc.perform(get("/api/UCSBSubjects/?id=7"))
                 .andExpect(status().isOk()).andReturn();
 
         // assert
@@ -70,7 +70,7 @@ public class UCSBSubjectControllerTests extends ControllerTestCase {
         String responseString = response.getResponse().getContentAsString();
         assertEquals(expectedJson, responseString);
     }
-    */ //maybe unlimplemented yet?
+     //maybe unlimplemented yet?
 
     @WithMockUser(roles = { "USER" })
     @Test
@@ -128,4 +128,29 @@ public class UCSBSubjectControllerTests extends ControllerTestCase {
         String responseString = response.getResponse().getContentAsString();
         assertEquals(expectedJson, responseString);
     }
+
+        
+        @WithMockUser(roles = { "USER" })
+    @Test
+    public void api_UCSBSubjects__user_logged_in__search_for_todo_that_does_not_exist() throws Exception {
+
+        // arrange
+
+        User u = currentUserService.getCurrentUser().getUser();
+
+        when(uCSBSubjectRepository.findById(eq(7L))).thenReturn(Optional.empty());
+
+        // act
+        MvcResult response = mockMvc.perform(get("/api/UCSBSubjects/?id=7"))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        // assert
+
+        verify(uCSBSubjectRepository, times(1)).findById(eq(7L));
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals("id 7 not found", responseString);
+    }
+    
+
+    
 }
