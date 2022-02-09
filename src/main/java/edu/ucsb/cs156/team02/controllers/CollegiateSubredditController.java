@@ -96,41 +96,85 @@ public class CollegiateSubredditController extends ApiController {
     @GetMapping("")
     public ResponseEntity<String> getCollegiateSubredditById(
             @ApiParam("id") @RequestParam Long id) throws JsonProcessingException {
+
         loggingService.logMethod();
 
-        CollegiateSubredditOrError csor = new CollegiateSubredditOrError(id);
+        CollegiateSubredditOrError csoe = new CollegiateSubredditOrError(id);
 
-        csor = doesCollegiateSubredditExist(csor);
-        if (csor.error != null) {
-            return csor.error;
+        csoe = doesCollegiateSubredditExist(csoe);
+        if (csoe.error != null) {
+            return csoe.error;
         }
 
-        String body = mapper.writeValueAsString(csor.collegiateSubreddit);
+        String body = mapper.writeValueAsString(csoe.collegiateSubreddit);
         return ResponseEntity.ok().body(body);
     }
 
+    @ApiOperation(value = "Edit a single college subreddit")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("")
+    public ResponseEntity<String> putCollegiateSubredditById(
+            @ApiParam("id") @RequestParam Long id, 
+            @RequestBody @Valid CollegiateSubreddit incomingCollegiateSubreddit) throws JsonProcessingException {
+        loggingService.logMethod();
+
+        CollegiateSubredditOrError csoe = new CollegiateSubredditOrError(id);
+
+        csoe = doesCollegiateSubredditExist(csoe);
+        if (csoe.error != null) {
+            return csoe.error;
+        }
+        
+        long previousId = csoe.collegiateSubreddit.getId();
+        incomingCollegiateSubreddit.setId(previousId);
+        collegiateSubredditRepository.save(incomingCollegiateSubreddit);
+        
+
+        String body = mapper.writeValueAsString(incomingCollegiateSubreddit);
+        return ResponseEntity.ok().body(body);
+    }
+
+    @ApiOperation(value = "Delete a college subreddit")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @DeleteMapping("")
+    public ResponseEntity<String> deleteCollegeSubreddit(
+            @ApiParam("id") @RequestParam Long id) {
+        loggingService.logMethod();
+
+        CollegiateSubredditOrError csoe = new CollegiateSubredditOrError(id);
+
+        csoe = doesCollegiateSubredditExist(csoe);
+        if (csoe.error != null) {
+            return csoe.error;
+        }
+
+        collegiateSubredditRepository.deleteById(id);
+
+        return ResponseEntity.ok().body(String.format("id %d deleted", id));
+
+    }
 
             /**
-     * Pre-conditions: csor.id is value to look up, csor.collegiateSubreddit and csor.error are null
+     * Pre-conditions: csoe.id is value to look up, csoe.collegiateSubreddit and csoe.error are null
      * 
-     * Post-condition: if collegeSubreddit with id csor.id exists, csor.collegeSubreddit now refers to it, and
+     * Post-condition: if collegeSubreddit with id csoe.id exists, csoe.collegeSubreddit now refers to it, and
      * error is null.
-     * Otherwise, collegeSubreddit with id csor.id does not exist, and error is a suitable return
+     * Otherwise, collegeSubreddit with id csoe.id does not exist, and error is a suitable return
      * value to
      * report this error condition.
      */
-    public CollegiateSubredditOrError doesCollegiateSubredditExist(CollegiateSubredditOrError csor) {
+    public CollegiateSubredditOrError doesCollegiateSubredditExist(CollegiateSubredditOrError csoe) {
 
-        Optional<CollegiateSubreddit> optionalCollegiateSubreddit = collegiateSubredditRepository.findById(csor.id);
+        Optional<CollegiateSubreddit> optionalCollegiateSubreddit = collegiateSubredditRepository.findById(csoe.id);
 
         if (optionalCollegiateSubreddit.isEmpty()) {
-            csor.error = ResponseEntity
+            csoe.error = ResponseEntity
                     .badRequest()
-                    .body(String.format("id %d not found", csor.id));
+                    .body(String.format("id %d not found", csoe.id));
         } else {
-            csor.collegiateSubreddit = optionalCollegiateSubreddit.get();
+            csoe.collegiateSubreddit = optionalCollegiateSubreddit.get();
         }
-        return csor;
+        return csoe;
     }
     
 }
