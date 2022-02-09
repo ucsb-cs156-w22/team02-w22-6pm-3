@@ -120,10 +120,40 @@ public class UCSBSubjectController extends ApiController {
         }
         return toe;
     }
+        public UCSBSubjectOrError doesUCSBSubjectExist1(UCSBSubjectOrError toe) {
 
+        Optional<UCSBSubject> optionalUCSBSubject = uCSBSubjectRepository.findById(toe.id);
+
+        if (optionalUCSBSubject.isEmpty()) {
+            toe.error = ResponseEntity
+                    .badRequest()
+                    .body(String.format("record %d not found", toe.id));
+        } else {
+            toe.uCSBSubject = optionalUCSBSubject.get();
+        }
+        return toe;
+    }
+
+    @ApiOperation(value = "Delete a UCSB Subject by ID")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @DeleteMapping("")
+    public ResponseEntity<String> deleteUCSBSubject(
+            @ApiParam("id") @RequestParam Long id) {
+        loggingService.logMethod();
+
+        UCSBSubjectOrError toe = new UCSBSubjectOrError(id);
+
+        toe = doesUCSBSubjectExist1(toe);
+        if (toe.error != null) {
+            return toe.error;
+        }
+
+        uCSBSubjectRepository.deleteById(id);
+        return ResponseEntity.ok().body(String.format("record %d deleted", id));
+
+    }
     
     
-
     
 
     
