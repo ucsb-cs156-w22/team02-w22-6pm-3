@@ -171,11 +171,11 @@ public class CollegiateSubredditControllerTests extends ControllerTestCase {
         }
 
 
+ // PUT(edit) tests
 
-
-	@WithMockUser(roles = { "USER" })
-    @Test
-    public void api_collegiateSubreddits__user_logged_in__put_collegiateSubreddit() throws Exception {
+        @WithMockUser(roles = { "USER" })
+        @Test
+        public void api_collegiateSubreddits__user_logged_in__put_collegiateSubreddit() throws Exception {
         // arrange
 
         CollegiateSubreddit redditPutTest = CollegiateSubreddit
@@ -209,9 +209,9 @@ public class CollegiateSubredditControllerTests extends ControllerTestCase {
 
 
 
-    @WithMockUser(roles = { "USER" })
-    @Test
-    public void api_collegiateSubreddits__user_logged_in__cannot_put_CollegiateSubreddit_that_does_not_exist() throws Exception {
+        @WithMockUser(roles = { "USER" })
+        @Test
+        public void api_collegiateSubreddits__user_logged_in__cannot_put_CollegiateSubreddit_that_does_not_exist() throws Exception {
         // arrange
 
 	CollegiateSubreddit updatedCollegiateSubreddit = CollegiateSubreddit.builder()

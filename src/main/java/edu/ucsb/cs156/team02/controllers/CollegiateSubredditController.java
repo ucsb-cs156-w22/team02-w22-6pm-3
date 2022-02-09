@@ -124,9 +124,9 @@ public class CollegiateSubredditController extends ApiController {
         if (csoe.error != null) {
             return csoe.error;
         }
-        
-        long previousId = csoe.collegiateSubreddit.getId();
-        incomingCollegiateSubreddit.setId(previousId);
+ 
+        //long previousId = csoe.collegiateSubreddit.getId();
+        //incomingCollegiateSubreddit.setId(previousId);
         collegiateSubredditRepository.save(incomingCollegiateSubreddit);
         
 
