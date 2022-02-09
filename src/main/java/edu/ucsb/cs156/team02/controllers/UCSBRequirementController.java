@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -130,5 +131,24 @@ public class UCSBRequirementController extends ApiController {
         }
         return roe;
     }
+
+    @ApiOperation(value = "Delete a requirement by ID")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @DeleteMapping("")
+    public ResponseEntity<String> deleteUCSBRequirement(
+            @ApiParam("id") @RequestParam Long id) {
+        loggingService.logMethod();
+
+        UCSBRequirementOrError toe = new UCSBRequirementOrError(id);
+
+        toe = doesUCSBRequirementExist(toe);
+        if (toe.error != null) {
+            return toe.error;
+        }
+
+        ucsbRequirementRepository.deleteById(id);
+        return ResponseEntity.ok().body(String.format("requirement with id %d deleted", id));
+
+    } 
 
 }
