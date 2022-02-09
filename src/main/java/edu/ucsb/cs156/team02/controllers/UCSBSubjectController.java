@@ -31,7 +31,7 @@ import java.util.Optional;
 
 
 @Api(description = "UCSBSubjects")
-@RequestMapping("/api/UCSBSubjects/")
+@RequestMapping("/api/UCSBSubjects")
 @RestController
 @Slf4j
 public class UCSBSubjectController extends ApiController {
