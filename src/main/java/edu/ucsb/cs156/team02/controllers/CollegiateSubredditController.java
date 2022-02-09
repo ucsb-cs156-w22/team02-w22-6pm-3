@@ -136,7 +136,7 @@ public class CollegiateSubredditController extends ApiController {
 
     @ApiOperation(value = "Delete a college subreddit")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @DeleteMapping("/all")
+    @DeleteMapping("")
     public ResponseEntity<String> deleteCollegeSubreddit(
             @ApiParam("id") @RequestParam Long id) {
         loggingService.logMethod();
